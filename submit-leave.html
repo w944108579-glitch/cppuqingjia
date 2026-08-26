@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>续假申请</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "PingFang SC", "Microsoft YaHei", system-ui, -apple-system, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        body {
+            background-color: #F5F6F7;
+            max-width: 480px;
+            margin: 0 auto;
+            overflow-x: hidden;
+        }
+
+        /* 顶部导航栏 */
+        .nav-bar {
+            width: 100%;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 12px;
+            background: #ffffff;
+            position: relative;
+            z-index: 10;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .nav-icon {
+            font-size: 18px;
+            color: #000000;
+            cursor: pointer;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-title {
+            font-size: 16px;
+            color: #000000;
+            font-weight: 500;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .nav-right {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: #000;
+        }
+
+        /* 表单卡片 */
+        .form-card {
+            background: #fff;
+            margin: 12px;
+            border-radius: 10px;
+            padding: 18px 14px 20px 14px;
+        }
+
+        .form-item {
+            margin-bottom: 16px;
+        }
+
+            .form-label {
+            font-size: 14px;
+            color: #1A1A1A;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .form-input, .form-textarea {
+            width: 100%;
+            height: 40px;
+            padding: 0 12px;
+            border: 1px solid #EEEEEE;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #333;
+            background: #F9FAFB;
+            outline: none;
+        }
+
+        .form-textarea {
+            height: 90px;
+            padding: 12px;
+            resize: none;
+            line-height: 1.5;
+        }
+
+        .submit-btn {
+            width: 100%;
+            height: 42px;
+            background-color: #54C6BC;
+            border: none;
+            border-radius: 21px;
+            color: #ffffff;
+            font-size: 16px;
+            margin-top: 6px;
+            cursor: pointer;
+            transition: opacity 0.2s ease;
+        }
+
+        .submit-btn:active {
+            opacity: 0.8;
+        }
+
+        /* 弹窗 */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+        }
+
+        .modal-box {
+            width: 75%;
+            max-width: 280px;
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .modal-text {
+            font-size: 15px;
+            color: #333;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .modal-btn {
+            padding: 10px 28px;
+            background: #54C6BC;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <div class="nav-bar">
+        <div class="nav-left">
+            <div class="nav-icon" onclick="backToRecord()"><</div>
+            <div class="nav-icon">×</div>
+        </div>
+        <div class="nav-title">续假申请</div>
+        <div class="nav-right">⋯</div>
+    </div>
+
+    <!-- 续假表单 -->
+    <div class="form-card">
+        <div class="form-item">
+            <label class="form-label">续假原因</label>
+            <input type="datetime-local" class="form-input" id="startTime">
+        </div>
+        <div class="form-item">
+            <label class="form-label">续假结束时间</label>
+            <input type="datetime-local" class="form-input" id="endTime">
+        </div>
+        <div class="form-item">
+            <label class="form-label">续假时长</label>
+            <input type="text" class="form-input" id="leaveLong" placeholder="请输入续假时长">
+        </div>
+        <div class="form-item">
+            <label class="form-label">续假原因</label>
+            <textarea class="form-textarea" id="leaveReason" placeholder="请详细填写续假原因"></textarea>
+        </div>
+
+        <button class="submit-btn" onclick="submitLeave()">提交续假信息</button>
+    </div>
+
+    <!-- 弹窗 -->
+    <div class="modal" id="modal">
+        <div class="modal-box">
+            <p class="modal-text" id="modalText"></p>
+            <button class="modal-btn" onclick="closeModal()">确认</button>
+        </div>
+    </div>
+
+    <script>
+        function backToRecord() {
+            window.location.href = "index.html";
+        }
+
+        function openModal(text) {
+            const modal = document.getElementById('modal');
+            const modalText = document.getElementById('modalText');
+            modalText.innerText = text;
+            modal.style.display = "flex";
+        }
+
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
+
+        function submitLeave() {
+            const startTime = document.getElementById('startTime').value;
+            const endTime = document.getElementById('endTime').value;
+            const leaveLong = document.getElementById('leaveLong').value;
+            const leaveReason = document.getElementById('leaveReason').value;
+
+            if(!startTime || !endTime || !leaveLong || !leaveReason) {
+                openModal('请填写完整的续假信息！');
+                return;
+            }
+
+            const newLeaveData = {
+                time: startTime + ' 至 ' + endTime,
+                long: leaveLong,
+                reason: leaveReason,
+                status: "待销假",
+                isNew: true
+            };
+
+            let leaveList = JSON.parse(localStorage.getItem('leaveList')) || [];
+            leaveList.unshift(newLeaveData);
+            localStorage.setItem('leaveList', JSON.stringify(leaveList));
+
+            openModal('续假提交成功，即将返回列表！');
+
+            setTimeout(() => {
+                window.location.href = "index.html";
+            }, 1200);
+        }
+    </script>
+</body>
+</html>

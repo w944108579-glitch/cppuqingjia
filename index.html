@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>日常请假系统</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "PingFang SC", "Microsoft YaHei", system-ui, -apple-system, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        body {
+            max-width: 630px;
+            margin: 0 auto;
+            overflow-x: hidden;
+            background: #f2f3f5;
+        }
+
+        /* 630 × 1260 参考图等比例布局 */
+        .nav-bar {
+            width: 100%;
+            height: min(11.746vw, 74px);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #fff;
+            position: relative;
+            z-index: 10;
+            border-bottom: min(.159vw, 1px) solid #e6e6e6;
+        }
+
+        .nav-left {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            position: relative;
+            top: min(.317vw, 2px);
+        }
+
+        .nav-icon {
+            position: relative;
+            width: min(6.349vw, 40px);
+            height: min(6.349vw, 40px);
+            color: transparent;
+            cursor: pointer;
+            flex: 0 0 auto;
+        }
+
+        .nav-icon:first-child::before {
+            content: "";
+            position: absolute;
+            left: min(2.54vw, 16px);
+            top: 50%;
+            width: min(2.54vw, 16px);
+            height: min(2.54vw, 16px);
+            border-left: min(.476vw, 3px) solid #111;
+            border-bottom: min(.476vw, 3px) solid #111;
+            transform: translateY(-50%) rotate(45deg);
+        }
+
+        .nav-icon:nth-child(2) {
+            margin-left: min(7.778vw, 49px);
+        }
+
+        .nav-icon:nth-child(2)::before,
+        .nav-icon:nth-child(2)::after {
+            content: "";
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: min(4.603vw, 29px);
+            height: min(.476vw, 3px);
+            border-radius: min(.238vw, 1.5px);
+            background: #111;
+        }
+
+        .nav-icon:nth-child(2)::before {
+            transform: translate(-50%, -50%) rotate(45deg);
+        }
+
+        .nav-icon:nth-child(2)::after {
+            transform: translate(-50%, -50%) rotate(-45deg);
+        }
+
+        .nav-title {
+            position: absolute;
+            left: 50%;
+            transform: translate(-50%, min(.317vw, 2px));
+            color: #050505;
+            font-size: min(4.127vw, 26px);
+            line-height: 1;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .nav-right {
+            width: min(11.746vw, 74px);
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: transparent;
+            position: relative;
+            top: min(.476vw, 3px);
+        }
+
+        .nav-right::before {
+            content: "";
+            width: min(.952vw, 6px);
+            height: min(.952vw, 6px);
+            border-radius: 50%;
+            background: #050505;
+            box-shadow: min(1.746vw, 11px) 0 #050505, min(3.492vw, 22px) 0 #050505;
+            transform: translateX(min(-1.746vw, -11px));
+        }
+
+        #leaveListContainer {
+            padding: 0;
+        }
+
+        .leave-card {
+            width: 100%;
+            height: min(76.19vw, 480px);
+            padding: min(3.968vw, 25px) min(4.127vw, 26px) min(4.444vw, 28px);
+            position: relative;
+            overflow: hidden;
+            margin-bottom: min(2.54vw, 16px);
+            background: #fff;
+        }
+
+        .leave-card.has-student {
+            height: min(87.143vw, 549px);
+            padding-top: min(5.714vw, 36px);
+        }
+
+        .row-item {
+            height: min(4.762vw, 30px);
+            margin-bottom: min(4.603vw, 29px);
+            display: flex;
+            align-items: center;
+            line-height: min(4.762vw, 30px);
+            white-space: nowrap;
+        }
+
+        .row-item:last-of-type {
+            margin-bottom: min(5.397vw, 34px);
+        }
+
+        .leave-card.has-student .row-item:last-of-type {
+            margin-bottom: min(5.079vw, 32px);
+        }
+
+        .label-text {
+            min-width: min(18.254vw, 115px);
+            flex-shrink: 0;
+            color: #999;
+            font-size: min(3.81vw, 24px);
+            font-weight: 400;
+        }
+
+        .value-text {
+            flex: 1;
+            min-width: 0;
+            color: #222;
+            font-size: min(3.968vw, 25px);
+            font-weight: 400;
+        }
+
+        .time-value {
+            color: #555;
+            font-size: min(4.127vw, 26px);
+            letter-spacing: max(-.01vw, -.06px);
+        }
+
+        .detail-link {
+            flex-shrink: 0;
+            margin-left: min(1.587vw, 10px);
+            color: #45c7c7;
+            font-size: min(3.651vw, 23px);
+            cursor: pointer;
+        }
+
+        .btn-teal {
+            width: min(40.476vw, 255px);
+            height: min(10.794vw, 68px);
+            margin: 0 auto;
+            display: block;
+            border: 0;
+            border-radius: min(2.222vw, 14px);
+            background: #5ac8c8;
+            color: #fff;
+            font-size: min(4.444vw, 28px);
+            font-weight: 400;
+            cursor: pointer;
+            transition: opacity .2s ease;
+        }
+
+        .btn-teal:active {
+            opacity: .8;
+        }
+
+        .corner-tag-orange,
+        .corner-tag-purple {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            width: min(17.46vw, 110px);
+            height: min(17.46vw, 110px);
+            color: #fff;
+            font-size: min(3.492vw, 22px);
+            line-height: 1;
+            white-space: nowrap;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .corner-tag-orange::before,
+        .corner-tag-purple::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            clip-path: polygon(100% 0, 100% 100%, 0 100%);
+        }
+
+        .corner-tag-orange::before {
+            background: #ff9a3c;
+        }
+
+        .corner-tag-purple::before {
+            background: #9854d1;
+        }
+
+        .corner-tag-orange span,
+        .corner-tag-purple span {
+            position: absolute;
+            right: max(-.159vw, -1px);
+            bottom: min(6.19vw, 39px);
+            width: min(11.111vw, 70px);
+            display: block;
+            text-align: center;
+            transform: rotate(-45deg);
+            transform-origin: center;
+        }
+
+        .btn-bottom {
+            width: calc(100% - min(6.032vw, 38px));
+            height: min(12.381vw, 78px);
+            margin: min(3.651vw, 23px) min(3.016vw, 19px) min(3.81vw, 24px);
+            border: 0;
+            border-radius: min(2.381vw, 15px);
+            background: #5ac8c8;
+            color: #fff;
+            font-size: min(4.762vw, 30px);
+            font-weight: 400;
+            cursor: pointer;
+            transition: opacity .2s ease;
+        }
+
+        .btn-bottom:active {
+            opacity: 0.8;
+        }
+
+        /* 弹窗 */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+        }
+
+        .modal-box {
+            width: 75%;
+            max-width: 280px;
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .modal-text {
+            font-size: 15px;
+            color: #333;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .modal-btn {
+            padding: 10px 28px;
+            background: #54C6BC;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <div class="nav-bar">
+        <div class="nav-left">
+            <div class="nav-icon"><</div>
+            <div class="nav-icon">×</div>
+        </div>
+        <div class="nav-title">日常请假系统</div>
+        <div class="nav-right">⋯</div>
+    </div>
+
+    <!-- 请假列表 -->
+    <div id="leaveListContainer">
+        <!-- 默认第一条：待销假 -->
+        <div class="leave-card">
+            <div class="corner-tag-orange"><span>待销假</span></div>
+
+            <div class="row-item">
+                <span class="label-text">姓名</span>
+                <span class="value-text">刘玉泽</span>
+            </div>
+            <div class="row-item">
+                <span class="label-text">请假时间</span>
+                <span class="value-text time-value">2026-08-26 23:44至2026-08-27 07:44</span>
+            </div>
+            <div class="row-item">
+                <span class="label-text">请假时长</span>
+                <span class="value-text">0天8小时</span>
+            </div>
+            <div class="row-item">
+                <span class="label-text">是否续假</span>
+                <span class="value-text">否</span>
+            </div>
+            <div class="row-item">
+                <span class="label-text">请假原因</span>
+                <span class="value-text">外出</span>
+            </div>
+            <div class="row-item">
+                <span class="label-text">销假状态</span>
+                <span class="value-text">待销假</span>
+            </div>
+
+            <button class="btn-teal" onclick="showLeaveNote()">请假条</button>
+        </div>
+
+        <!-- 默认第二条：已销假 -->
+        <div class="leave-card has-student">
+            <div class="corner-tag-purple"><span>已销假</span></div>
+
+            <div class="row-item">
+                <span class="label-text">学号</span>
+                <span class="value-text">2025903066</span>
+                <span class="detail-link" onclick="showDetail()">查看详情 ›</span>
+            </div>
+            <div class="row-item">
+                <span class="label-text">姓名</span>
+                <span class="value-text">刘玉泽</span>
+            </div>
+            <div class="row-item">
+                <span class="label-text">请假时间</span>
+                <span class="value-text time-value">2026-07-19 11:40至2026-07-19 19:40</span>
+            </div>
+            <div class="row-item">
+                <span class="label-text">请假时长</span>
+                <span class="value-text">0天8小时</span>
+            </div>
+            <div class="row-item">
+                <span class="label-text">是否续假</span>
+                <span class="value-text">否</span>
+            </div>
+            <div class="row-item">
+                <span class="label-text">请假原因</span>
+                <span class="value-text">外出</span>
+            </div>
+            <div class="row-item">
+                <span class="label-text">销假状态</span>
+                <span class="value-text">已销假</span>
+            </div>
+
+            <button class="btn-teal" onclick="showLeaveNote()">请假条</button>
+        </div>
+    </div>
+
+    <!-- 提交续假按钮 -->
+    <button class="btn-bottom" onclick="jumpToSubmitPage()">提交续假</button>
+
+    <!-- 弹窗 -->
+    <div class="modal" id="modal">
+        <div class="modal-box">
+            <p class="modal-text" id="modalText"></p>
+            <button class="modal-btn" onclick="closeModal()">确认</button>
+        </div>
+    </div>
+
+    <script>
+        window.onload = function(){
+            renderNewLeaveCards();
+        }
+
+        function renderNewLeaveCards(){
+            const leaveList = JSON.parse(localStorage.getItem('leaveList')) || [];
+            const container = document.getElementById('leaveListContainer');
+
+            leaveList.forEach(item => {
+                const cardHtml = `
+                <div class="leave-card">
+                    <div class="corner-tag-orange"><span>待销假</span></div>
+
+                    <div class="row-item">
+                        <span class="label-text">姓名</span>
+                        <span class="value-text">刘玉泽</span>
+                    </div>
+                    <div class="row-item">
+                        <span class="label-text">请假时间</span>
+                        <span class="value-text time-value">${item.time}</span>
+                    </div>
+                    <div class="row-item">
+                        <span class="label-text">请假时长</span>
+                        <span class="value-text">${item.long}</span>
+                    </div>
+                    <div class="row-item">
+                        <span class="label-text">是否续假</span>
+                        <span class="value-text">是</span>
+                    </div>
+                    <div class="row-item">
+                        <span class="label-text">请假原因</span>
+                        <span class="value-text">${item.reason}</span>
+                    </div>
+                    <div class="row-item">
+                        <span class="label-text">销假状态</span>
+                        <span class="value-text">${item.status}</span>
+                    </div>
+
+                    <button class="btn-teal" onclick="showLeaveNote()">请假条</button>
+                </div>
+                `;
+                container.insertAdjacentHTML('afterbegin', cardHtml);
+            });
+        }
+
+        function openModal(text) {
+            const modal = document.getElementById('modal');
+            const modalText = document.getElementById('modalText');
+            modalText.innerText = text;
+            modal.style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
+
+        function showLeaveNote() {
+            openModal('正在加载请假条详情...');
+        }
+
+        function showDetail() {
+            openModal('加载请假记录详情成功');
+        }
+
+        function jumpToSubmitPage() {
+            window.location.href = "submit-leave.html";
+        }
+    </script>
+</body>
+</html>
