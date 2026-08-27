@@ -12,13 +12,14 @@
         h1{text-align:center;font-size:min(4vw,24px);font-weight:500;margin-bottom:30px}
         .form-row{margin-bottom:20px}.form-row label{display:block;margin-bottom:8px;font-size:min(3vw,18px);color:#333}
         .form-row input{width:100%;height:48px;border:1px solid #ddd;border-radius:7px;padding:0 14px;outline:none;font-size:16px;color:#333}.form-row input:focus{border-color:#55c7c4}
+        .password-mask{-webkit-text-security:disc}
         .enter-btn{width:100%;height:50px;margin-top:8px;border:0;border-radius:8px;background:linear-gradient(90deg,#27e2d4,#1878e8);color:#fff;font-size:min(3vw,18px);cursor:pointer}
     </style>
 </head>
 <body>
     <form class="login-card" onsubmit="enterWebsite(event)">
         <h1>请填写进入信息</h1>
-        <div class="form-row"><label for="password">密码</label><input id="password" type="password" autocomplete="off" required></div>
+        <div class="form-row"><label for="password">密码</label><input id="password" class="password-mask" type="text" inputmode="text" autocomplete="off" required></div>
         <div class="form-row"><label for="studentName">姓名</label><input id="studentName" autocomplete="off" required></div>
         <div class="form-row"><label for="studentId">学号</label><input id="studentId" inputmode="numeric" autocomplete="off" required></div>
         <button class="enter-btn" type="submit">进入</button>
