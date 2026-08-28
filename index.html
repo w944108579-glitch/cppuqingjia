@@ -36,6 +36,7 @@
             position: relative;
             z-index: 10;
             border-bottom: 1px solid #e6e6e6;
+            display: none;
         }
         .nav-left {
             height: 100%;
@@ -146,18 +147,21 @@
             min-width: 115px;
             flex-shrink: 0;
             color: #222;
-            font-size: 23px;
+            font-size: min(3.81vw, 23px);
             font-weight: 400;
         }
         .value-text {
             flex: 1;
             min-width: 0;
             color: #999;
-            font-size: 22px;
+            font-size: min(3.968vw, 22px);
             font-weight: 400;
         }
+        .status-text {
+            font-size: 22px;
+        }
         .time-value {
-            letter-spacing: -.06px;
+            letter-spacing: max(-.01vw, -.06px);
         }
         .detail-link {
             flex-shrink: 0;
@@ -260,15 +264,6 @@
     </style>
 </head>
 <body>
-    <!-- 顶部导航栏 -->
-    <div class="nav-bar">
-        <div class="nav-left">
-            <div class="nav-icon" onclick="exitWebsite()"><</div>
-            <div class="nav-icon">×</div>
-        </div>
-        <div class="nav-title">日常请假列表</div>
-        <div class="nav-right">⋯</div>
-    </div>
     <!-- 请假列表 -->
     <div id="leaveListContainer">
         <!-- 默认第一条：待销假 -->
@@ -301,7 +296,7 @@
             </div>
             <div class="row-item">
                 <span class="label-text">销假状态</span>
-                <span class="value-text">待销假</span>
+                <span class="value-text status-text">待销假</span>
             </div>
             <button class="btn-teal" type="button">请假条</button>
         </div>
@@ -335,7 +330,7 @@
             </div>
             <div class="row-item">
                 <span class="label-text">销假状态</span>
-                <span class="value-text">已销假</span>
+                <span class="value-text status-text">已销假</span>
             </div>
             <button class="btn-teal" type="button">请假条</button>
         </div>
@@ -422,7 +417,7 @@
                     </div>
                     <div class="row-item">
                         <span class="label-text">销假状态</span>
-                        <span class="value-text">${item.status}</span>
+                        <span class="value-text status-text">${item.status}</span>
                     </div>
                     <button class="btn-teal" type="button">请假条</button>
                 </div>
