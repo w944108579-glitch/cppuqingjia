@@ -33,17 +33,17 @@
         textarea.field{resize:vertical;min-height:54px}.radio-group{display:flex;flex:1;justify-content:space-around;color:#999;font-size:min(3.81vw,24px)}
         .radio-option{display:flex;align-items:center;gap:10px;cursor:pointer}.radio-option input{appearance:none;width:27px;height:27px;border:1px solid #eee;border-radius:50%;background:#fff;position:relative}.radio-option input:checked:after{content:"";position:absolute;width:11px;height:11px;border-radius:50%;background:#fff;left:7px;top:7px}.radio-option input:checked{border-color:#55c7c4;background:#55c7c4}
         .upload{color:#999;font-size:min(3.81vw,24px);cursor:pointer}.upload input{display:none}.hint{color:#aaa;font-size:14px;margin-left:8px}
-        .time-picker{flex:1;min-width:0;display:grid;grid-template-columns:minmax(0,1fr) 16px minmax(0,1fr);align-items:center;gap:6px}.time-picker input[type=datetime-local],.time-picker>span{width:100%;min-width:0;border:0;outline:0;background:transparent;color:#999;font-size:min(3.81vw,24px);line-height:1.35;font-family:inherit;font-weight:400}.time-picker>span{text-align:center}.time-picker input[type=datetime-local]:focus{color:#555}
+        .time-picker{flex:1;min-width:0;display:grid;grid-template-columns:minmax(0,1fr) 16px minmax(0,1fr);align-items:center;gap:6px}.time-picker input[type=datetime-local],.time-picker>span{width:100%;min-width:0;border:0;outline:0;background:transparent;color:#999;font-size:min(3.81vw,24px);line-height:1.35;font-family:inherit;font-weight:400}.time-picker>span{text-align:center}.time-picker input[type=datetime-local]:focus{color:#555}.time-display{white-space:normal;overflow-wrap:anywhere;word-break:normal;line-height:min(4.762vw,30px);padding:2px 0}.time-picker .time-display{display:none;text-align:left}
         .bottom-bar{width:100%;height:66px;margin-top:min(2.54vw,16px);background:#fff;border-top:1px solid #e6e6e6;display:flex;align-items:center;justify-content:center}.save-btn{width:88%;height:48px;border:0;border-radius:8px;background:linear-gradient(90deg,#27e2d4,#1878e8);color:#fff;font-size:18px;cursor:pointer}.save-btn:active{opacity:.8}
-        .view-only .field:disabled{opacity:1;color:#999;-webkit-text-fill-color:#999}.view-only .radio-option input:disabled{opacity:1}.view-only .radio-option input:checked:disabled{border-color:#b8b8b8;background:#b8b8b8}.view-only .radio-option,.view-only .upload{pointer-events:none}
-        body>section:first-of-type{margin-top:min(2.54vw,16px)}
+        .view-only .field:disabled{opacity:1;color:#999;-webkit-text-fill-color:#999}.view-only .radio-option input:disabled{opacity:1}.view-only .radio-option input:checked:disabled{border-color:#b8b8b8;background:#b8b8b8}.view-only .radio-option,.view-only .upload{pointer-events:none}.view-only .time-picker{display:block}.view-only .time-picker input[type=datetime-local],.view-only .time-picker>span{display:none}.view-only .time-picker .time-display{display:block}
+        body>section:first-of-type{margin-top:0;padding-top:min(2.54vw,16px);background:#fff}
         @media(max-width:400px){.label{width:26vw;flex-basis:26vw}.detail-row{padding-left:14px;padding-right:14px}.radio-group{gap:8px;justify-content:flex-start}}
     </style>
 </head>
 <body>
     <section><h2 class="section-title">请假信息</h2>
         <div class="detail-row"><label class="label required" for="semester">学期</label><input id="semester" class="field" value="2025-2026学年第一学期"></div>
-        <div class="detail-row tall"><span class="label required">请假时间</span><div class="time-picker"><input id="startTimePicker" type="datetime-local" value="2025-11-16T09:00" aria-label="开始时间"><span>至</span><input id="endTimePicker" type="datetime-local" value="2025-11-16T14:00" aria-label="结束时间"><input id="leaveTime" type="hidden" value="2025-11-16 09:00至2025-11-16 14:00"></div></div>
+        <div class="detail-row tall"><span class="label required">请假时间</span><div class="time-picker"><input id="startTimePicker" type="datetime-local" value="2025-11-16T09:00" aria-label="开始时间"><span>至</span><input id="endTimePicker" type="datetime-local" value="2025-11-16T14:00" aria-label="结束时间"><span id="leaveTimeDisplay" class="field time-display"></span><input id="leaveTime" type="hidden" value="2025-11-16 09:00至2025-11-16 14:00"></div></div>
         <div class="detail-row"><span class="label">共计</span><input id="total" class="field" value="0天5小时" readonly></div>
         <div class="detail-row"><label class="label required" for="leaveType">请假类型</label><input id="leaveType" class="field" value="校外"></div>
         <div class="detail-row"><label class="label required" for="reason">请假原因</label><select id="reason" class="field"><option value="病假">病假</option><option value="事假">事假</option><option value="实习实践">实习实践</option><option value="周末外出" selected>周末外出</option><option value="节假日外出">节假日外出</option><option value="其他">其他</option></select></div>
@@ -58,7 +58,7 @@
         <div class="detail-row tall"><span class="label required">是否离开廊坊</span><div class="radio-group"><label class="radio-option"><input type="radio" name="outLangfang" value="是">是</label><label class="radio-option"><input type="radio" name="outLangfang" value="否" checked>否</label></div></div>
         <div class="detail-row"><label class="label required" for="outPlace">外出地点</label><input id="outPlace" class="field" value="河北省廊坊市广阳区"></div>
         <div class="detail-row tall"><label class="label" for="outDetail">外出详细地点</label><input id="outDetail" class="field" value="广阳区万达广场"></div>
-        <div class="detail-row tall"><label class="label required" for="outTime">外出时间</label><input id="outTime" class="field" value="2025-11-16 09:00 至 2025-11-16 14:00" readonly></div>
+        <div class="detail-row tall"><label class="label required" for="outTime">外出时间</label><textarea id="outTime" class="field time-display" rows="2" readonly>2025-11-16 09:00至2025-11-16 14:00</textarea></div>
         <div class="detail-row"><label class="label required" for="goMethod">外出方式（去）</label><input id="goMethod" class="field" value="公交"></div>
         <div class="detail-row"><label class="label required" for="backMethod">外出方式（回）</label><input id="backMethod" class="field" value="公交"></div>
         <div class="detail-row tall"><span class="label required">是否结伴同行</span><div class="radio-group"><label class="radio-option"><input type="radio" name="companion" value="是">是</label><label class="radio-option"><input type="radio" name="companion" value="否" checked>否</label></div></div>
@@ -96,10 +96,18 @@
             });
             updateDuration();
             setViewMode();
+            const status = document.getElementById('status').value;
+            if(!(selectedRecord&&selectedRecord.isNew) && status === '已销假'){
+                document.getElementById('cancelTime').value = randomCancelTime(document.getElementById('leaveTime').value);
+            }else if(!(selectedRecord&&selectedRecord.isNew)){
+                document.getElementById('cancelBy').value = '';
+                document.getElementById('cancelTime').value = '';
+            }
         });
         ['startTimePicker','endTimePicker'].forEach(id=>['input','change'].forEach(event=>document.getElementById(id).addEventListener(event,updateDuration)));
 
         function normalizeReason(reason){
+            if(String(reason)==='1')return '周末外出';
             if(reason==='外出')return '周末外出';
             return reason.replace(/^校外:/,'');
         }
@@ -128,7 +136,16 @@
             const summary=start&&end ? `${pickerText(start)}至${pickerText(end)}` : '';
             document.getElementById('leaveTime').value=summary;
             document.getElementById('outTime').value=summary;
+            document.getElementById('leaveTimeDisplay').textContent=summary;
             return summary;
+        }
+
+        function randomCancelTime(summary){
+            const match=String(summary).match(/(\d{4}-\d{2}-\d{2})[ T](\d{2}:\d{2})\s*至\s*(\d{4}-\d{2}-\d{2})[ T](\d{2}:\d{2})/);
+            const end=new Date(`${match[3]}T${match[4]}`);
+            end.setMinutes(end.getMinutes()+Math.floor(Math.random()*121));
+            const pad=value=>String(value).padStart(2,'0');
+            return `${end.getFullYear()}-${pad(end.getMonth()+1)}-${pad(end.getDate())} ${pad(end.getHours())}:${pad(end.getMinutes())}`;
         }
 
         function parseLeaveTime(){
