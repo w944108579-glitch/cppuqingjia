@@ -136,6 +136,7 @@
             align-items: center;
             line-height: min(4.762vw, 30px);
             white-space: nowrap;
+			gap: 30px;
         }
         .row-item:last-of-type {
             margin-bottom: min(5.397vw, 34px);
@@ -150,6 +151,19 @@
             font-size: min(3.81vw, 23px);
             font-weight: 400;
         }
+		    /* 新增：只针对请假时间行 */
+		.row-item.time-row {
+			height: auto;
+			min-height: min(4.762vw, 30px);
+			white-space: normal;
+			align-items: flex-start;
+		}
+
+		.row-item.time-row .value-text {
+			text-indent: -1.2em;
+			padding-left: 1.2em;
+			word-break: break-all;
+		}
         .value-text {
             flex: 1;
             min-width: 0;
@@ -167,7 +181,7 @@
             flex-shrink: 0;
             margin-left: 10px;
             color: #45c7c7;
-            font-size: 15px;
+            font-size: min(2vw, 20px);
             cursor: pointer;
         }
         .btn-teal {
@@ -189,8 +203,8 @@
             position: absolute;
             right: 0;
             bottom: 0;
-            width: min(5vw, 60px);
-            height: min(5vw, 60px);
+            width: min(10vw, 60px);
+            height: min(10vw, 60px);
             color: #fff;
             font-size: 15px;
             line-height: 1;
@@ -223,7 +237,7 @@
 			justify-content: center;
 			font-weight: 300;  /* 字体变细 */
 			text-align: center;
-			transform: rotate(-45deg) translate(-2.8px, 16.5px);
+			transform: rotate(-45deg) translate(-5px, 10px);
 		}
         /* 新增：强制绘制右下角白色三角缺口，不再依赖文字溢出 */
         .corner-tag-orange::after,
@@ -250,7 +264,7 @@
 			border-radius: 0;
 			background: linear-gradient(90deg, #27e2d4 0%, #1878e8 100%);
 			color: #ffffff;
-			font-size: min(2vw, 20px);
+			font-size: min(7vw, 20px);
 			font-weight: 400;
 			letter-spacing: 2px;
 			cursor: pointer;
@@ -270,9 +284,9 @@
         <div class="leave-card has-student" data-record-id="default-20260826" data-start-time="2026-08-26T23:44">
             <div class="corner-tag-orange"><span>待销假</span></div>
             <div class="row-item">
-                <span class="label-text">学号</span>
-                <span class="value-text">2025903066</span>
-                <span class="detail-link" onclick="showDetail(this.closest('.leave-card'))">查看详情 ></span>
+            <div class="row-item time-row">
+				<span class="label-text">请假时间</span>
+				<span class="value-text time-value">2026-08-26 23:44至2026-08-27 07:44</span>
             </div>
             <div class="row-item">
                 <span class="label-text">姓名</span>
@@ -313,8 +327,9 @@
                 <span class="value-text">王贺</span>
             </div>
             <div class="row-item">
-                <span class="label-text">请假时间</span>
-                <span class="value-text time-value">2026-07-19 11:40至2026-07-19 19:40</span>
+			<div class="row-item time-row">
+				<span class="label-text">请假时间</span>
+				<span class="value-text time-value">2026-07-19 11:40至2026-07-19 19:40</span>
             </div>
             <div class="row-item">
                 <span class="label-text">请假时长</span>
@@ -399,7 +414,7 @@
                         <span class="label-text">姓名</span>
                         <span class="value-text">王贺</span>
                     </div>
-                    <div class="row-item">
+                    <div class="row-item time-row">
                         <span class="label-text">请假时间</span>
                         <span class="value-text time-value">${showTime}</span>
                     </div>
