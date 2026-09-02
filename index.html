@@ -151,7 +151,7 @@
             align-items: center;
             line-height: min(4.762vw, 30px);
             white-space: nowrap;
-			gap: 30px;
+			gap: 20px;
         }
         .row-item:last-of-type {
             margin-bottom: min(5.397vw, 34px);
@@ -168,16 +168,16 @@
         }
 		    /* 新增：只针对请假时间行 */
 		.row-item.time-row {
-			height: auto;
+			height: min(4.762vw, 30px); 
 			min-height: min(4.762vw, 30px);
-			white-space: normal;
-			align-items: flex-start;
+			white-space: nowrap;
+			align-items: center;
 		}
 
 		.row-item.time-row .value-text {
 			word-break: normal;
 			overflow-wrap: anywhere;
-			line-height:  30px;
+			line-height: min(4.762vw, 30px);
 		}
         .value-text {
             flex: 1;
