@@ -42,7 +42,7 @@
 </head>
 <body>
     <section><h2 class="section-title">请假信息</h2>
-        <div class="detail-row"><label class="label required" for="semester">学期</label><input id="semester" class="field" value="2025-2026学年第一学期"></div>
+        <div class="detail-row"><label class="label required" for="semester">学期</label><input id="semester" class="field" value="2026-2027学年第一学期"></div>
         <div class="detail-row tall"><span class="label required">请假时间</span><div class="time-picker"><input id="startTimePicker" type="datetime-local" value="2025-11-16T09:00" aria-label="开始时间"><span>至</span><input id="endTimePicker" type="datetime-local" value="2025-11-16T14:00" aria-label="结束时间"><span id="leaveTimeDisplay" class="field time-display"></span><input id="leaveTime" type="hidden" value="2025-11-16 09:00至2025-11-16 14:00"></div></div>
         <div class="detail-row"><span class="label">共计</span><input id="total" class="field" value="0天5小时" readonly></div>
         <div class="detail-row"><label class="label required" for="leaveType">请假类型</label><input id="leaveType" class="field" value="校外"></div>
@@ -90,6 +90,7 @@
                 setPickersFromSummary(saved.leaveTime);
             }
             ids.forEach(id=>{if(saved[id]!==undefined)document.getElementById(id).value=saved[id]});
+            document.getElementById('semester').value='2026-2027学年第一学期';
             Object.keys(saved.radios||{}).forEach(name=>{
                 const el=document.querySelector(`input[name="${name}"][value="${saved.radios[name]}"]`);
                 if(el)el.checked=true;

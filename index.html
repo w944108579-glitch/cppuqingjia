@@ -135,6 +135,9 @@
             overflow: hidden;
             margin-bottom: min(2.54vw, 16px);
             background: #fff;
+			user-select: none;
+			-webkit-user-select: none;
+			-webkit-touch-callout: none;
         }
         .leave-card.has-student {
 			height: auto;                      /* 高度自适应内容 */
@@ -198,14 +201,14 @@
         }
         .btn-teal {
             width: min(30vw, 180px);
-            height: min(8vw, 50px);
+            height: min(10vw, 50px);
             margin: 30px auto 20px;
             display: block;
             border: 0;
             border-radius: min(2.222vw, 14px);
             background: linear-gradient(90deg, #27e2d4 0%, #1878e8 100%);
             color: #fff;
-            font-size: min(3vw, 20px);
+            font-size: min(4vw, 20px);
             font-weight: 400;
             cursor: default;
             pointer-events: none;
@@ -371,6 +374,9 @@
             renderNewLeaveCards(leaveList);
             applyStaticOverrides();
             applyUserProfile();
+            applyDeletedRecords();
+            sortLeaveCards();
+            attachLongPressHandlers();
             updateLeaveStatuses(leaveList);
         }
 
@@ -399,7 +405,8 @@
 
         function migrateLeaveList(){
             const leaveList = JSON.parse(localStorage.getItem('leaveList')) || [];
-            const migrated = leaveList.map((item, index) => {
+            const deletedIds = JSON.parse(localStorage.getItem('deletedLeaveRecordIds')) || [];
+            const migrated = leaveList.filter(item => !deletedIds.includes(item.id)).map((item, index) => {
                 if (!item.startTime || !item.endTime) {
                     const times = item.time.split(' 至 ');
                     item.startTime = times[0];
@@ -412,9 +419,44 @@
                 item.duration = formatDuration(item.startTime, item.endTime);
                 item.reason = normalizeReason(item.reason);
                 return item;
-            });
+            }).sort((a, b) => new Date(b.startTime) - new Date(a.startTime));
             localStorage.setItem('leaveList', JSON.stringify(migrated));
             return migrated;
+        }
+
+        function applyDeletedRecords(){
+            const deletedIds = JSON.parse(localStorage.getItem('deletedLeaveRecordIds')) || [];
+            document.querySelectorAll('.leave-card').forEach(card => {
+                if (deletedIds.includes(card.dataset.recordId)) card.remove();
+            });
+        }
+
+        function sortLeaveCards(){
+            const container = document.getElementById('leaveListContainer');
+            const endMarker = container.querySelector('.list-end');
+            Array.from(container.querySelectorAll('.leave-card'))
+                .sort((a, b) => new Date(b.dataset.startTime) - new Date(a.dataset.startTime))
+                .forEach(card => container.insertBefore(card, endMarker));
+        }
+
+        function attachLongPressHandlers(){
+            document.querySelectorAll('.leave-card').forEach(card => {
+                let timer;
+                const cancel = () => { clearTimeout(timer); timer = undefined; };
+                card.addEventListener('pointerdown', () => {
+                    timer = setTimeout(() => {
+                        const deletedIds = JSON.parse(localStorage.getItem('deletedLeaveRecordIds')) || [];
+                        if (!deletedIds.includes(card.dataset.recordId)) deletedIds.push(card.dataset.recordId);
+                        localStorage.setItem('deletedLeaveRecordIds', JSON.stringify(deletedIds));
+                        const leaveList = JSON.parse(localStorage.getItem('leaveList')) || [];
+                        localStorage.setItem('leaveList', JSON.stringify(leaveList.filter(item => item.id !== card.dataset.recordId)));
+                        card.remove();
+                        timer = undefined;
+                    }, 3000);
+                });
+                ['pointerup', 'pointercancel', 'pointerleave'].forEach(event => card.addEventListener(event, cancel));
+                card.addEventListener('contextmenu', event => event.preventDefault());
+            });
         }
 
         function renderNewLeaveCards(leaveList){
