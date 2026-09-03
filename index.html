@@ -543,7 +543,7 @@
             cards.forEach(card => {
                 const isLatest = card === latestCard;
                 const savedStatus = statusOverrides[card.dataset.recordId];
-                const status = isLatest && savedStatus === '待销假' ? '待销假' : (isLatest && savedStatus === undefined ? '待销假' : '已销假');
+                const status = isLatest && savedStatus !== '已销假' ? '待销假' : '已销假';
                 if (status === '待销假') hasPending = true;
                 const tag = card.querySelector('[class^="corner-tag-"]');
                 tag.className = status === '待销假' ? 'corner-tag-orange' : 'corner-tag-purple';
@@ -552,8 +552,10 @@
                     row.querySelector('.label-text').textContent === '销假状态'
                 );
                 statusRow.querySelector('.value-text').textContent = status;
+                statusOverrides[card.dataset.recordId] = status;
             });
             document.querySelector('.btn-bottom').textContent = hasPending ? '提交续假' : '提交请假';
+            localStorage.setItem('leaveStatusOverrides', JSON.stringify(statusOverrides));
 
             leaveList.forEach(item => {
                 const card = document.querySelector(`[data-record-id="${item.id}"]`);
