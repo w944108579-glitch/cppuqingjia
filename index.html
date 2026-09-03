@@ -367,7 +367,7 @@
         <div class="list-end">已经到底了哦</div>
     </div>
     <!-- 提交请假按钮 -->
-    <button class="btn-bottom" onclick="jumpToSubmitPage()">提交请假</button>
+        <button class="btn-bottom" onclick="jumpToSubmitPage()">提交请假</button>
        <script>
         window.onload = function(){
             const leaveList = migrateLeaveList();
@@ -538,11 +538,13 @@
             const cards = Array.from(document.querySelectorAll('.leave-card'));
             const latestCard = cards[0];
             const statusOverrides = JSON.parse(localStorage.getItem('leaveStatusOverrides')) || {};
+            let hasPending = false;
 
             cards.forEach(card => {
                 const isLatest = card === latestCard;
                 const savedStatus = statusOverrides[card.dataset.recordId];
-                const status = savedStatus !== undefined ? savedStatus : (isLatest ? '待销假' : '已销假');
+                const status = isLatest && savedStatus === '待销假' ? '待销假' : (isLatest && savedStatus === undefined ? '待销假' : '已销假');
+                if (status === '待销假') hasPending = true;
                 const tag = card.querySelector('[class^="corner-tag-"]');
                 tag.className = status === '待销假' ? 'corner-tag-orange' : 'corner-tag-purple';
                 tag.querySelector('span').textContent = status;
@@ -551,6 +553,7 @@
                 );
                 statusRow.querySelector('.value-text').textContent = status;
             });
+            document.querySelector('.btn-bottom').textContent = hasPending ? '提交续假' : '提交请假';
 
             leaveList.forEach(item => {
                 const card = document.querySelector(`[data-record-id="${item.id}"]`);
