@@ -573,11 +573,14 @@
                 const value = row.querySelector('.value-text');
                 if (label && value) values[label.textContent] = value.textContent;
             });
+            const detail = JSON.parse(localStorage.getItem(`leaveDetail:${card.dataset.recordId}`) || '{}');
             localStorage.setItem('selectedLeaveRecord', JSON.stringify({
                 id: card.dataset.recordId,
                 leaveTime: values['请假时间'],
                 total: values['请假时长'],
                 reason: normalizeReason(values['请假原因']),
+                leaveType: detail.leaveType || '校外',
+                description: detail.description || '',
                 status: values['销假状态']
             }));
             window.location.replace("leave-detail.html");

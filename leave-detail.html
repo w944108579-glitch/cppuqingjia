@@ -96,6 +96,11 @@
                 if(el)el.checked=true;
             });
             if(selectedRecord) document.getElementById('status').value=selectedRecord.status;
+            if(selectedRecord&&!selectedRecord.isNew){
+                document.getElementById('leaveType').value=selectedRecord.leaveType||'校外';
+                document.getElementById('reason').value=normalizeReason(selectedRecord.reason);
+                document.getElementById('description').value=selectedRecord.description||'';
+            }
             updateDuration();
             setViewMode();
             if(selectedRecord&&selectedRecord.isNew){
