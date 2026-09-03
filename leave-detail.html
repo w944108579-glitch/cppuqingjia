@@ -128,6 +128,8 @@
                 document.getElementById('cancelBy').value = '刘冰';
                 document.getElementById('cancelTime').value = randomCancelTime(document.getElementById('leaveTime').value);
             }else{
+				const descriptions = ['廊坊市人民医院', '广阳区万达广场', '广阳区万向城'];
+				document.getElementById('description').value = descriptions[Math.floor(Math.random() * descriptions.length)];
                 document.getElementById('cancelBy').value = '';
                 document.getElementById('cancelTime').value = '';
             }
