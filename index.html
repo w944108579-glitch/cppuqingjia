@@ -370,6 +370,13 @@
         <button class="btn-bottom" onclick="jumpToSubmitPage()">提交请假</button>
        <script>
         window.onload = function(){
+			if (!history.state || !history.state.leaveList) {
+			history.pushState({ leaveList: true }, '', location.href);
+			}
+			window.addEventListener('popstate', () => {
+			// 关闭页面或返回
+			window.close();
+			});
             const leaveList = migrateLeaveList();
             renderNewLeaveCards(leaveList);
             applyStaticOverrides();
